@@ -1,12 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package streamingipv6.client;
 
 import java.net.InetAddress;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,21 +16,28 @@ public class StreamingIPv6Client {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         /**
          * The script used for reproduction of the streaming video
          */
         String reproductionScript;
+
         /**
          * The multicast group direction
          */
         InetAddress mdir;
+
         /**
          * The multicast group port
          */
         int mport;
+        
+        /**
+         * The list of servers, each of them with their corresponding channels
+         */
+        HashMap servers;
 
-        if (args.length % 2 == 0) {
+        if (args.length % 2 != 0) {
             throw new IllegalArgumentException("Error; los parámetros son incorrectos");
         }
 
@@ -61,5 +65,10 @@ public class StreamingIPv6Client {
                 mport = Integer.parseInt(args[i + 1]);
             }
         }
+
+        //we launch the channel updater
+        servers = new HashMap<ServerKey, Server>();
+        Thread updater = new Thread(new MulticastUpdater(servers));
+        updater.start();
     }
 }
