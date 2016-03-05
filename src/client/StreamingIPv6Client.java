@@ -1,4 +1,4 @@
-package streamingipv6.client;
+package client;
 
 import java.net.InetAddress;
 import java.net.Inet6Address;
@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import utils.ServerKey;
 
 /**
  *
@@ -15,6 +16,7 @@ public class StreamingIPv6Client {
 
     /**
      * @param args the command line arguments
+     * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws InterruptedException {
         /**

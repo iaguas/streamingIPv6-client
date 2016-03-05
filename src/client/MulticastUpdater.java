@@ -1,4 +1,4 @@
-package streamingipv6.client;
+package client;
 
 import java.util.HashMap;
 
