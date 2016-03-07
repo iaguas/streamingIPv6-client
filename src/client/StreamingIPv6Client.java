@@ -1,5 +1,6 @@
 package client;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
@@ -33,7 +34,7 @@ public class StreamingIPv6Client {
          * The multicast group port
          */
         int mport;
-        
+
         /**
          * The list of servers, each of them with their corresponding channels
          */
@@ -70,7 +71,15 @@ public class StreamingIPv6Client {
 
         //we launch the channel updater
         servers = new HashMap<ServerKey, Server>();
-        Thread updater = new Thread(new MulticastUpdater(servers));
+        Thread updater;
+        while (true) {
+            try {
+                updater = new Thread(new MulticastUpdater(mdir, mport, servers));
+                break;
+            } catch (IOException ex) {
+                Logger.getLogger(StreamingIPv6Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         updater.start();
     }
 }
