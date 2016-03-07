@@ -33,7 +33,7 @@ public class StreamingIPv6Client {
         /**
          * The multicast group port
          */
-        int mport;
+        Integer mport;
 
         /**
          * The list of servers, each of them with their corresponding channels
@@ -43,6 +43,10 @@ public class StreamingIPv6Client {
         if (args.length % 2 != 0) {
             throw new IllegalArgumentException("Error; los parámetros son incorrectos");
         }
+
+        reproductionScript = null;
+        mdir = null;
+        mport = null;
 
         //reading the parameters
         for (int i = 1; i < args.length; i++) {
@@ -61,6 +65,11 @@ public class StreamingIPv6Client {
                     System.out.println("ERROR; Host desconocido");
                     System.exit(-1);
                 }
+            }
+
+            if (reproductionScript == null || mdir == null || mport == null) {
+                System.out.println("ERROR; no todos los parámetros se han inicializado");
+                System.exit(-1);
             }
 
             //we set the multicast group ip

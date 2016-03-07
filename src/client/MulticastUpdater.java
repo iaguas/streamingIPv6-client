@@ -31,7 +31,7 @@ public class MulticastUpdater implements Runnable {
      * The list of servers, each of them with their corresponding channels
      */
     private HashMap<ServerKey, Server> servers;
-    
+
     /**
      * The multicast socket used to listen the servers
      */
@@ -60,7 +60,7 @@ public class MulticastUpdater implements Runnable {
     @Override
     public void run() {
         byte[] buf = new byte[2000];
-        while(true) {
+        while (true) {
             try {
                 DatagramPacket p = new DatagramPacket(buf, 2000);
                 ms.receive(p);
