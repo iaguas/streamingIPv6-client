@@ -2,6 +2,7 @@ package client;
 
 import java.io.IOException;
 import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -27,7 +28,7 @@ public class StreamingIPv6Client {
         /**
          * The multicast group direction
          */
-        Inet6Address mdir;
+        InetAddress mdir;
 
         /**
          * The multicast group port
@@ -58,7 +59,8 @@ public class StreamingIPv6Client {
             //we set the multicast group direction
             if (args[i].equals("-m")) {
                 try {
-                    mdir = Inet6Address.getByAddress("ServerListMulticast", args[i + 1].getBytes(), 5); //multicast scope
+                    mdir = InetAddress.getByName(args[i + 1]);
+                    //mdir = Inet6Address.getByAddress("ServerListMulticast", args[i + 1].getBytes(), 5); //multicast scope
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(StreamingIPv6Client.class.getName()).log(Level.SEVERE, null, ex);
                     System.out.println("ERROR; Host desconocido");
