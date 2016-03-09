@@ -13,7 +13,7 @@ import utils.ServerKey;
  * Updates the server and channel list periodically, when it receives a message
  * via multicast
  *
- * @author rsng06
+ * @author Daniel
  */
 public class MulticastUpdater implements Runnable {
 
@@ -65,6 +65,7 @@ public class MulticastUpdater implements Runnable {
                 DatagramPacket p = new DatagramPacket(buf, 2000);
                 ms.receive(p);
                 String datos = new String(buf);
+                //TODO: tratamiento los paquetes
             } catch (IOException ex) {
                 Logger.getLogger(MulticastUpdater.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("ERROR; no se ha podido leer la lista de servidores/canales");

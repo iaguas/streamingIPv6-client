@@ -1,7 +1,6 @@
 package client;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Inet6Address;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -11,7 +10,7 @@ import utils.ServerKey;
 
 /**
  *
- * @author rsng06
+ * @author Daniel
  */
 public class StreamingIPv6Client {
 
@@ -28,7 +27,7 @@ public class StreamingIPv6Client {
         /**
          * The multicast group direction
          */
-        InetAddress mdir;
+        Inet6Address mdir;
 
         /**
          * The multicast group port
@@ -59,7 +58,7 @@ public class StreamingIPv6Client {
             //we set the multicast group direction
             if (args[i].equals("-m")) {
                 try {
-                    mdir = InetAddress.getByName(args[i + 1]);
+                    mdir = Inet6Address.getByAddress("ServerListMulticast", args[i + 1].getBytes(), 5); //multicast scope
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(StreamingIPv6Client.class.getName()).log(Level.SEVERE, null, ex);
                     System.out.println("ERROR; Host desconocido");
@@ -83,10 +82,13 @@ public class StreamingIPv6Client {
         Thread updater;
         while (true) {
             try {
+                System.out.println("Intentando conectarse a la lista de canales...");
                 updater = new Thread(new MulticastUpdater(mdir, mport, servers));
+                System.out.println("Conexión a la lista de canales con éxito.");
                 break;
             } catch (IOException ex) {
                 Logger.getLogger(StreamingIPv6Client.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Error al conectarse; reintentando...");
             }
         }
         updater.start();
