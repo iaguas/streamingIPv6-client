@@ -1,6 +1,6 @@
 package client;
 
-import java.net.Inet6Address;
+import java.net.InetAddress;
 import java.util.HashMap;
 
 /**
@@ -8,13 +8,15 @@ import java.util.HashMap;
  * @author inigo
  */
 public class Server {
-    private final Inet6Address ip;
+    private final InetAddress ip;
     private final int port;
+    private boolean isComitted;
     private final HashMap<Integer, Channel> channelList = new HashMap<Integer, Channel>();
     
-    public Server(Inet6Address ipv6, int port) {
+    public Server(InetAddress ipv6, int port) {
         ip = ipv6;
         this.port = port;
+        isComitted = false;
     }
     
     public void addChannel(Channel ch) {
@@ -27,6 +29,10 @@ public class Server {
         channelList.remove(key, ch);
     }
     
+    public void delAllChannel() {
+        channelList.clear();
+    }
+    
     public Channel getChannel(Integer key) {
         return channelList.get(key);
     }
@@ -35,7 +41,19 @@ public class Server {
         return channelList.get(key);
     }
     
-    public Inet6Address getIP() {
+    public void commitServer(){
+        isComitted = true;
+    }
+    
+    public void notCommitServer(){
+        isComitted = true;
+    }
+    
+    public boolean isComitted(){
+        return isComitted;
+    }
+    
+    public InetAddress getIP() {
         return ip;
     }
     

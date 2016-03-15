@@ -1,16 +1,16 @@
 package utils;
 
-import java.net.Inet6Address;
+import java.net.InetAddress;
 
 /**
  *
  * @author inigo
  */
 public class ServerKey {
-    Inet6Address ip;
+    InetAddress ip;
     int port;
     
-    public ServerKey(Inet6Address ipv6, int port) {
+    public ServerKey(InetAddress ipv6, int port) {
         ip = ipv6;
         this.port = port;
     }
