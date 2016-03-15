@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.ServerKey;
@@ -103,16 +104,14 @@ public class StreamingIPv6Client {
         updater.start();
 
         //Shell
-        /*
-         * commands:
-         * SERVERS: server list
-         * CONNECT server
-         */
+        System.out.println("Comandos:");
+        System.out.println("SERVERS: lista de servidores");
+        System.out.println("CONNECT servidor canal puerto_cliente: conexión a un canal de un servidor");
+
         Scanner scanner = new Scanner(System.in);
         String s; //keyboard input
 
         Server server; //the server to which we connect
-        Socket serverSocket;
         while (true) {
             System.out.print(">");
             s = scanner.next();
@@ -120,30 +119,29 @@ public class StreamingIPv6Client {
             if (s.toLowerCase().equals("servers")) {
                 System.out.println("lista de servidores:");
 
-                //we show the list of servers
-                ArrayList<Server> servers = sl.toArray();
-                for(int i = 0; i< servers.size(); i++) {
+                //we show the list of servers (with their channels)
+                ArrayList<Server> servers = sl.toArrayList();
+                for (int i = 0; i < servers.size(); i++) {
                     System.out.println("servidor" + i + ":");
-                    System.out.println(servers.get(i).getIP());
-                    System.out.println(servers.get(i).getPort());
-                    
-                    //we show the list of channels for that server
+                    System.out.println(servers.get(i).toString() + "\n");
                 }
 
             } else if (s.toLowerCase().startsWith("connect")) {
-                try {
-                    ///TCP connection to the server
-                    serverSocket = new Socket(server.getIP(), server.getPort());
-
-                    ///envío de mensajes al servidor
-                    DataOutputStream outToServer = new DataOutputStream(serverSocket.getOutputStream());
-                    BufferedReader inFromServer = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
-                } catch (IOException ex) {
-                    Logger.getLogger(StreamingIPv6Client.class.getName()).log(Level.SEVERE, null, ex);
-                    System.out.println("ERROR, no ha podido conectarse al servidor");
+                StringTokenizer tokens = new StringTokenizer(s);
+                if (tokens.countTokens() != 4) {
+                    System.out.println("Error: la llamada a CONNECT es incorrecta");
+                } else {
+                    tokens.nextToken(); //we remove the "connect" token
+                    int serverIndex = Integer.parseInt(tokens.nextToken());
+                    int channelIndex = Integer.parseInt(tokens.nextToken());
+                    int clientPort = Integer.parseInt(tokens.nextToken());
+                    
+                    server = sl.toArrayList().get(serverIndex);
+                    Streamer streamer = new Streamer(server, server.getChannel(channelIndex), clientPort, reproductionScript);
+                    streamer.run();
                 }
             } else {
-                System.out.println("Invalid command");
+                System.out.println("Comando inválido");
             }
         }//end while(true)
     }

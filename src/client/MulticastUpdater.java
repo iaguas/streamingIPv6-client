@@ -68,7 +68,7 @@ public class MulticastUpdater implements Runnable {
             try {
                 DatagramPacket p = new DatagramPacket(buf, 2000);
                 ms.receive(p);
-<<<<<<< HEAD
+
                 //String data = new String(buf); // convertir a BufferedReader
                 // Recoger los datos del string
                 BufferedReader data = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(buf)));
@@ -106,10 +106,10 @@ public class MulticastUpdater implements Runnable {
                 else if(line.equals("END"))
                     s.notCommitServer();
                 
-=======
+
                 String datos = new String(buf);
                 //TODO: tratamiento los paquetes
->>>>>>> b7b88076c80f6416fb46b2872b721afcf2d173c3
+
             } catch (IOException ex) {
                 Logger.getLogger(MulticastUpdater.class.getName()).log(Level.SEVERE, null, ex);
                 System.out.println("ERROR; no se ha podido leer la lista de servidores/canales");

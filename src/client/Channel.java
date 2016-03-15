@@ -20,4 +20,14 @@ public class Channel {
     public String getTitle(){
         return title;
     }
+    
+    @Override
+    public String toString() {
+        String s = new String();
+        
+        s += this.numChannel + ": ";
+        s += this.title;
+        
+        return s;
+    }
 }

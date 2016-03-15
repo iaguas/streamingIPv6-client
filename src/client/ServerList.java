@@ -30,7 +30,7 @@ public class ServerList {
         return list.get(key);
     }
 
-    public ArrayList<Server> toArray() {
+    public ArrayList<Server> toArrayList() {
         return new ArrayList<Server>(list.values());
     }
 }
