@@ -46,17 +46,19 @@ public class StreamingIPv6Client {
          * The list of servers, each of them with their corresponding channels
          */
         ServerList sl;
+        
+        System.out.println("Streaming Client IPv6");
 
         if (args.length % 2 != 0) {
             throw new IllegalArgumentException("Error; los parámetros son incorrectos");
         }
-
+        
         reproductionScript = null;
         mdir = null;
         mport = null;
 
         //reading the parameters
-        for (int i = 1; i < args.length; i++) {
+        for (int i = 0; i < args.length; i++) {
 
             //we set the reproduction script
             if (args[i].equals("-s")) {
@@ -75,21 +77,28 @@ public class StreamingIPv6Client {
                 }
             }
 
-            if (reproductionScript == null || mdir == null || mport == null) {
-                System.out.println("ERROR; no todos los parámetros se han inicializado");
-                System.exit(-1);
-            }
-
             //we set the multicast group ip
             if (args[i].equals("-o")) {
                 mport = Integer.parseInt(args[i + 1]);
             }
         }
 
+        if (reproductionScript == null || mdir == null || mport == null) {
+            System.out.println("ERROR; no todos los parámetros se han inicializado:");
+            System.out.println("Dirección de multicast: " + mdir);
+            System.out.println("Puerto de multicast: " + mport);
+            System.out.println("Script de reproducción: " + reproductionScript);
+            System.exit(-1);
+        } else {
+            System.out.println("Lectura de datos correcta:");
+            System.out.println("Dirección de multicast: " + mdir);
+            System.out.println("Puerto de multicast: " + mport);
+            System.out.println("Script de reproducción: " + reproductionScript);
+        }
+
         //we launch the channel updater
         sl = new ServerList();
         Thread updater;
-        System.out.println("StreamingIpv6Client\n");
         while (true) {
             try {
                 System.out.println("Intentando conectarse a la lista de canales...");
@@ -135,7 +144,7 @@ public class StreamingIPv6Client {
                     int serverIndex = Integer.parseInt(tokens.nextToken());
                     int channelIndex = Integer.parseInt(tokens.nextToken());
                     int clientPort = Integer.parseInt(tokens.nextToken());
-                    
+
                     server = sl.toArrayList().get(serverIndex);
                     Streamer streamer = new Streamer(server, server.getChannel(channelIndex), clientPort, reproductionScript);
                     streamer.run();
