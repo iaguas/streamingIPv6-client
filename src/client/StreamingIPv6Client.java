@@ -123,7 +123,7 @@ public class StreamingIPv6Client {
         Server server; //the server to which we connect
         while (true) {
             System.out.print(">");
-            s = scanner.next();
+            s = scanner.nextLine();
 
             if (s.toLowerCase().equals("servers")) {
                 System.out.println("lista de servidores:");
