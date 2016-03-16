@@ -4,7 +4,7 @@
 hs_err_pid*
 /nbproject/private/
 /build/
-/dist/
+/dist/README.txt
 
 # Ignore Mac files
 *.DS_Store
