@@ -66,11 +66,11 @@ public class Server {
     public String toString() {
         String s = new String();
         s += "ip: " + this.ip + "\n";
-        s += "port: " + this.port;
+        s += "port: " + this.port + "\n";
         s += "canales:\n";
 
         for (Channel channel : this.channelList.values()) {
-            channel.toString();
+            s += "\t" + channel.toString() + "\n";
         }
 
         return s;
