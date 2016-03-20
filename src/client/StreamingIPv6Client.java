@@ -1,20 +1,14 @@
 package client;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Inet6Address;
 import java.net.InetAddress;
-import java.net.Socket;
+//import java.net.Inet6Address;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import utils.ServerKey;
 
 /**
  *
@@ -46,13 +40,13 @@ public class StreamingIPv6Client {
          * The list of servers, each of them with their corresponding channels
          */
         ServerList sl;
-        
-        System.out.println("Streaming Client IPv6");
+
+        System.out.println("Streaming Client IPv6\n\n");
 
         if (args.length % 2 != 0) {
             throw new IllegalArgumentException("Error; los parámetros son incorrectos");
         }
-        
+
         reproductionScript = null;
         mdir = null;
         mport = null;
@@ -95,6 +89,7 @@ public class StreamingIPv6Client {
             System.out.println("Puerto de multicast: " + mport);
             System.out.println("Script de reproducción: " + reproductionScript);
         }
+        System.out.println("\n");
 
         //we launch the channel updater
         sl = new ServerList();
@@ -113,9 +108,10 @@ public class StreamingIPv6Client {
         updater.start();
 
         //Shell
+        System.out.println("\n");
         System.out.println("Comandos:");
         System.out.println("SERVERS: lista de servidores");
-        System.out.println("CONNECT servidor canal puerto_cliente: conexión a un canal de un servidor");
+        System.out.println("CONNECT servidor canal puerto_cliente: conexión a un canal de un servidor\n");
 
         Scanner scanner = new Scanner(System.in);
         String s; //keyboard input
@@ -131,7 +127,7 @@ public class StreamingIPv6Client {
                 //we show the list of servers (with their channels)
                 ArrayList<Server> servers = sl.toArrayList();
                 for (int i = 0; i < servers.size(); i++) {
-                    System.out.println("servidor" + i + ":");
+                    System.out.println("servidor" + (i + 1) + ":"); //the client sees the servers starting by 1
                     System.out.println(servers.get(i).toString() + "\n");
                 }
 
@@ -141,7 +137,7 @@ public class StreamingIPv6Client {
                     System.out.println("Error: la llamada a CONNECT es incorrecta");
                 } else {
                     tokens.nextToken(); //we remove the "connect" token
-                    int serverIndex = Integer.parseInt(tokens.nextToken());
+                    int serverIndex = Integer.parseInt(tokens.nextToken()) - 1;
                     int channelIndex = Integer.parseInt(tokens.nextToken());
                     int clientPort = Integer.parseInt(tokens.nextToken());
 
