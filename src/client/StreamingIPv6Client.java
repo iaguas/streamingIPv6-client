@@ -44,6 +44,7 @@ public class StreamingIPv6Client {
         System.out.println("Streaming Client IPv6\n\n");
 
         if (args.length % 2 != 0) {
+            System.out.println("StreamingIPv6Client -s scriptreproducir -m mdir -o mpuerto");
             throw new IllegalArgumentException("Error; los parámetros son incorrectos");
         }
 
@@ -79,6 +80,7 @@ public class StreamingIPv6Client {
 
         if (reproductionScript == null || mdir == null || mport == null) {
             System.out.println("ERROR; no todos los parámetros se han inicializado:");
+            System.out.println("StreamingIPv6Client -s scriptreproducir -m mdir -o mpuerto");
             System.out.println("Dirección de multicast: " + mdir);
             System.out.println("Puerto de multicast: " + mport);
             System.out.println("Script de reproducción: " + reproductionScript);
@@ -110,6 +112,7 @@ public class StreamingIPv6Client {
         //Shell
         System.out.println("\n");
         System.out.println("Comandos:");
+        System.out.println("EXIT: finaliza el programa");
         System.out.println("SERVERS: lista de servidores");
         System.out.println("CONNECT servidor canal puerto_cliente: conexión a un canal de un servidor\n");
 
@@ -121,7 +124,9 @@ public class StreamingIPv6Client {
             System.out.print(">");
             s = scanner.nextLine();
 
-            if (s.toLowerCase().equals("servers")) {
+            if (s.toLowerCase().equals("exit")) {
+                System.exit(0);
+            } else if (s.toLowerCase().equals("servers")) {
                 System.out.println("lista de servidores:");
 
                 //we show the list of servers (with their channels)
@@ -130,7 +135,6 @@ public class StreamingIPv6Client {
                     System.out.println("servidor" + (i + 1) + ":"); //the client sees the servers starting by 1
                     System.out.println(servers.get(i).toString() + "\n");
                 }
-
             } else if (s.toLowerCase().startsWith("connect")) {
                 StringTokenizer tokens = new StringTokenizer(s);
                 if (tokens.countTokens() != 4) {
