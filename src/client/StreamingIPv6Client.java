@@ -114,7 +114,7 @@ public class StreamingIPv6Client {
         System.out.println("Comandos:");
         System.out.println("EXIT: finaliza el programa");
         System.out.println("SERVERS: lista de servidores");
-        System.out.println("CONNECT servidor canal puerto_cliente: conexión a un canal de un servidor\n");
+        System.out.println("CONNECT servidor canal puerto_cliente [ip_cliente]: conexión a un canal de un servidor\n");
 
         Scanner scanner = new Scanner(System.in);
         String s; //keyboard input
@@ -137,7 +137,7 @@ public class StreamingIPv6Client {
                 }
             } else if (s.toLowerCase().startsWith("connect")) {
                 StringTokenizer tokens = new StringTokenizer(s);
-                if (tokens.countTokens() != 4) {
+                if ((tokens.countTokens() != 4) || (tokens.countTokens() != 5)) { //CONNECT servidor canal puerto_cliente [ip_cliente]
                     System.out.println("Error: la llamada a CONNECT es incorrecta");
                 } else {
                     tokens.nextToken(); //we remove the "connect" token

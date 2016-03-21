@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,21 +15,33 @@ import java.util.logging.Logger;
  */
 public class Streamer implements Runnable {
 
-    Server server;
-    Channel channel;
-    Socket serverSocket;
-    int clientPort;
+    private Server server;
+    private Channel channel;
+    private Socket serverSocket;
+    private int clientPort;
 
     /**
      * The path to the reproduction script
      */
-    String reproductionScript;
+    private String reproductionScript;
+
+    /**
+     * It's possible to specify an ip direction to receive the streaming,
+     * instead of using the default oned
+     */
+    private InetAddress dir;
 
     public Streamer(Server server, Channel channel, int clientPort, String reproductionScript) {
         this.server = server;
         this.channel = channel;
         this.clientPort = clientPort;
         this.reproductionScript = reproductionScript;
+        this.dir = null;
+    }
+
+    public Streamer(Server server, Channel channel, InetAddress dir, int clientPort, String reproductionScript) {
+        this(server, channel, clientPort, reproductionScript);
+        this.dir = dir;
     }
 
     @Override
@@ -57,8 +70,15 @@ public class Streamer implements Runnable {
             return;
         }
 
+        String message = "REQ " //REQ
+                + this.channel.getNumChannel() //id
+                + " " + this.clientPort; //clientPort
+        if (this.dir != null) {
+            message += dir.toString(); //clientDirection
+        }
+
         try {
-            outToServer.writeBytes("REQ " + this.channel.getNumChannel() + " " + this.clientPort);
+            outToServer.writeBytes(message);
 
             String res = inFromServer.readLine();
 
@@ -76,5 +96,4 @@ public class Streamer implements Runnable {
             return;
         }
     }
-
 }
