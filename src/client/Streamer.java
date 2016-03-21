@@ -10,14 +10,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Stablishes a connection with the server and asks for a streaming.
  *
  * @author Daniel
  */
 public class Streamer implements Runnable {
 
+    /**
+     * The server which contains the channel we want to stream.
+     */
     private Server server;
+
+    /**
+     * The channel we want to stream.
+     */
     private Channel channel;
+
+    /**
+     * The server socket.
+     */
     private Socket serverSocket;
+
+    /**
+     * The port where we want to receive the streaming.
+     */
     private int clientPort;
 
     /**
@@ -31,6 +47,14 @@ public class Streamer implements Runnable {
      */
     private InetAddress dir;
 
+    /**
+     * Default constructor, when we don't have an alternative ip direction.
+     *
+     * @param server The server which contains the channel we want to see
+     * @param channel The channel we want to see
+     * @param clientPort the port where we want to receive the streaming
+     * @param reproductionScript the path to the reproduction script
+     */
     public Streamer(Server server, Channel channel, int clientPort, String reproductionScript) {
         this.server = server;
         this.channel = channel;
@@ -39,11 +63,25 @@ public class Streamer implements Runnable {
         this.dir = null;
     }
 
+    /**
+     * Alternative constructor for when we have to receive the streaming in an
+     * alternative ip direction.
+     *
+     * @param server The server which contains the channel we want to see
+     * @param channel The channel we want to see
+     * @param dir The direction where we want to receive the streaming
+     * @param clientPort the port where we want to receive the streaming
+     * @param reproductionScript the path to the reproduction script
+     */
     public Streamer(Server server, Channel channel, InetAddress dir, int clientPort, String reproductionScript) {
         this(server, channel, clientPort, reproductionScript);
         this.dir = dir;
     }
 
+    /**
+     * Tries to connect to the selected server and requests a streaming
+     * petition.
+     */
     @Override
     public void run() {
         DataOutputStream outToServer;
