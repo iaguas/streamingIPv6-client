@@ -112,6 +112,7 @@ public class StreamingIPv6Client {
         //Shell
         System.out.println("\n");
         System.out.println("Comandos:");
+        System.out.println("HELP: lista de comandos");
         System.out.println("EXIT: finaliza el programa");
         System.out.println("SERVERS: lista de servidores");
         System.out.println("CONNECT servidor canal puerto_cliente [ip_cliente]: conexión a un canal de un servidor\n");
@@ -126,18 +127,25 @@ public class StreamingIPv6Client {
 
             if (s.toLowerCase().equals("exit")) {
                 System.exit(0);
+            } else if (s.toLowerCase().equals("help")) {
+                System.out.println("\n");
+                System.out.println("Comandos:");
+                System.out.println("HELP: lista de comandos");
+                System.out.println("EXIT: finaliza el programa");
+                System.out.println("SERVERS: lista de servidores");
+                System.out.println("CONNECT servidor canal puerto_cliente [ip_cliente]: conexión a un canal de un servidor\n");
             } else if (s.toLowerCase().equals("servers")) {
                 System.out.println("lista de servidores:");
 
                 //we show the list of servers (with their channels)
                 ArrayList<Server> servers = sl.toArrayList();
                 for (int i = 0; i < servers.size(); i++) {
-                    System.out.println("servidor" + (i + 1) + ":"); //the client sees the servers starting by 1
+                    System.out.println("servidor " + (i + 1) + ":"); //the client sees the servers starting by 1
                     System.out.println(servers.get(i).toString() + "\n");
                 }
             } else if (s.toLowerCase().startsWith("connect")) {
                 StringTokenizer tokens = new StringTokenizer(s);
-                if ((tokens.countTokens() != 4) || (tokens.countTokens() != 5)) { //CONNECT servidor canal puerto_cliente [ip_cliente]
+                if ((tokens.countTokens() != 4) && (tokens.countTokens() != 5)) { //CONNECT servidor canal puerto_cliente [ip_cliente]
                     System.out.println("Error: la llamada a CONNECT es incorrecta");
                 } else {
                     tokens.nextToken(); //we remove the "connect" token

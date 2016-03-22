@@ -25,17 +25,14 @@ public class MulticastUpdater implements Runnable {
      * The multicast group direction
      */
     private final InetAddress mdir;
-
     /**
      * The multicast group port
      */
     private final int mport;
-
     /**
      * The list of servers, each of them with their corresponding channels
      */
     private final ServerList sl;
-
     /**
      * The multicast socket used to listen the servers
      */
@@ -73,42 +70,48 @@ public class MulticastUpdater implements Runnable {
                 // Recoger los datos del string
                 BufferedReader data = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(buf)));
                 String line = data.readLine();
-                final StringTokenizer tokens = new StringTokenizer(line);
+                StringTokenizer tokens = new StringTokenizer(line);
                 tokens.nextToken();
-                final int port = new Integer(tokens.nextToken());
+                int port = new Integer(tokens.nextToken());
                 InetAddress ip;
                 try {
                     ip = InetAddress.getByName(tokens.nextToken());
-                } catch (NoSuchElementException e){
-                    ip = ms.getInetAddress();
+                } catch (NoSuchElementException e) {
+                    ip = p.getAddress();
                 }
-                
+
                 // Si existe el servidor, lo recupero y borro la lista de canales. 
                 // Sino lo creo
                 Server s = sl.getServer(new ServerKey(ip, port));
-                if(s==null)
+                if (s == null) {
                     s = new Server(ip, port);
-                else
-                    s.delAllChannel();
-                
+                    sl.addServer(s);
+                } else {
+                    if (s.isComitted()) {
+                        s.delAllChannel();
+                    }
+                }
+
                 // Relleno la lista con los canales.
                 line = data.readLine();
-                while(! (line.equals("MORE") || line.equals("END"))){
+
+                while (!line.toLowerCase().startsWith("more") && !line.toLowerCase().startsWith("end")) {
+                    tokens = new StringTokenizer(line);
                     tokens.nextToken();
                     int numChannel = Integer.parseInt(tokens.nextToken());
                     String channelTitle = tokens.nextToken();
+                    while (tokens.hasMoreTokens()) {
+                        channelTitle += " " + tokens.nextToken();
+                    }
                     s.addChannel(new Channel(numChannel, channelTitle));
                     line = data.readLine();
                 }
-                
-                if (line.equals("MORE"))
-                    s.commitServer();
-                else if(line.equals("END"))
-                    s.notCommitServer();
-                
 
-                String datos = new String(buf);
-                //TODO: tratamiento los paquetes
+                if (line.toLowerCase().startsWith("end")) {
+                    s.commitServer();
+                } else if (line.toLowerCase().startsWith("more")) {
+                    s.notCommitServer();
+                }
 
             } catch (IOException ex) {
                 Logger.getLogger(MulticastUpdater.class.getName()).log(Level.SEVERE, null, ex);

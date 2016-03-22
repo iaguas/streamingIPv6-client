@@ -27,7 +27,7 @@ public class Server {
 
     public void delChannel(Channel ch) {
         Integer key = ch.getNumChannel();
-        channelList.remove(key, ch);
+        //channelList.remove(key, ch);
     }
 
     public void delAllChannel() {
@@ -47,7 +47,7 @@ public class Server {
     }
 
     public void notCommitServer() {
-        isComitted = true;
+        isComitted = false;
     }
 
     public boolean isComitted() {
