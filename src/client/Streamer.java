@@ -99,9 +99,11 @@ public class Streamer implements Runnable {
             return;
         }
 
+        Process proc;
         try {
             //launch bash
-            Runtime.getRuntime().exec(new String[]{this.reproductionScript, String.valueOf(clientPort)});
+            proc = Runtime.getRuntime().exec(new String[]{this.reproductionScript, String.valueOf(clientPort)});
+            System.out.println("El script de reproducción se ha ejecutado con éxito");
         } catch (IOException ex) {
             Logger.getLogger(Streamer.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("ERROR; no se ha podido abrir ejecutar el script de reproducción");
@@ -112,17 +114,17 @@ public class Streamer implements Runnable {
                 + this.channel.getNumChannel() //id
                 + " " + this.clientPort; //clientPort
         if (this.dir != null) {
-            message += dir.toString(); //clientDirection
+            message += " " + dir.toString(); //clientDirection
         }
 
         try {
-            outToServer.writeBytes(message);
+            outToServer.writeBytes(message + '\n');
 
             String res = inFromServer.readLine();
 
-            if (res.toLowerCase().equals("REQ OK")) {
+            if (res.toLowerCase().startsWith("req ok")) {
                 System.out.println("El servidor ha comenzado el envío del vídeo");
-            } else if (res.toLowerCase().startsWith("REQ FAIL")) {
+            } else if (res.toLowerCase().startsWith("req fail")) {
                 System.out.println("ERROR; El servidor no ha enviado el vídeo");
                 System.out.println("Motivo: " + res.substring(res.lastIndexOf(" ") + 1));
             } else {
@@ -132,6 +134,18 @@ public class Streamer implements Runnable {
             Logger.getLogger(Streamer.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("ERROR; no se ha podido leer la respuesta del servidor");
             return;
+        }
+        
+        // Wait to end the video and close connection.
+        try {
+            proc.waitFor();
+            try {
+                serverSocket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Streamer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Streamer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
